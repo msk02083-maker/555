@@ -1,0 +1,6 @@
+{
+  "name": "오늘도빵",
+  "description": "매일 직접 만드는 수제 빵과 신선한 커피가 있는 따뜻한 동네 카페, 오늘도빵입니다.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
