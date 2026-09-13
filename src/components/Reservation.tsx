@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle } from 'lucide-react';
+import { db, collection, addDoc, serverTimestamp } from '../lib/firebase';
 
 const breadOptions = [
   '시그니처 소금빵',
@@ -27,9 +28,24 @@ export default function Reservation() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitted(true);
+    setIsSubmitting(true);
+    try {
+      await addDoc(collection(db, 'reservations'), {
+        ...formData,
+        status: 'pending',
+        createdAt: serverTimestamp()
+      });
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error("예약 실패:", error);
+      alert('예약 접수 중 오류가 발생했습니다. 매장으로 전화 문의 부탁드립니다.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const resetForm = () => {
@@ -193,9 +209,10 @@ export default function Reservation() {
 
               <button 
                 type="submit"
-                className="w-full bg-[#8C6D56] text-white py-5 text-2xl font-bold rounded-md hover:bg-[#755945] transition-colors shadow-sm"
+                disabled={isSubmitting}
+                className="w-full bg-[#8C6D56] text-white py-5 text-2xl font-bold rounded-md hover:bg-[#755945] transition-colors shadow-sm disabled:opacity-50"
               >
-                예약하기
+                {isSubmitting ? '예약 접수 중...' : '예약하기'}
               </button>
             </motion.form>
           ) : (

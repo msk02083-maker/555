@@ -1,0 +1,39 @@
+{
+  "entities": {
+    "Reservation": {
+      "title": "Reservation",
+      "description": "A customer's bread reservation.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 50 },
+        "menu": { "type": "string", "maxLength": 200 },
+        "quantity": { "type": "number" },
+        "date": { "type": "string", "maxLength": 20 },
+        "time": { "type": "string", "maxLength": 20 },
+        "requests": { "type": "string", "maxLength": 1000 },
+        "status": { "type": "string", "enum": ["pending", "preparing", "completed"] },
+        "createdAt": { "type": "timestamp" }
+      },
+      "required": ["name", "phone", "menu", "quantity", "date", "time", "status", "createdAt"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "An admin user allowed to view and manage reservations.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "reservations/{reservationId}": {
+      "schema": "Reservation",
+      "description": "Customer reservations"
+    },
+    "admins/{adminId}": {
+      "schema": "Admin",
+      "description": "Admin access list"
+    }
+  }
+}
